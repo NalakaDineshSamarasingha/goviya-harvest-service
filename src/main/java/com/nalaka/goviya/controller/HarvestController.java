@@ -139,6 +139,34 @@ public class HarvestController {
                 .body(new ApiResponseDTO<>(false, "Error retrieving farmer harvests: " + e.getMessage(), null));
         }
     }
+
+    @GetMapping("/status/{status}")
+    @Operation(summary = "Get harvests by status", description = "Retrieve all harvests for a specific status")
+    public ResponseEntity<ApiResponseDTO<List<HarvestResponseDTO>>> getHarvestsByStatus(@PathVariable String status) {
+        try {
+            List<HarvestResponseDTO> results = harvestService.getHarvestsByStatus(status);
+            return ResponseEntity.ok(new ApiResponseDTO<>(true, "Harvests retrieved successfully", results));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new ApiResponseDTO<>(false, "Error retrieving harvests by status: " + e.getMessage(), null));
+        }
+    }
+
+    @GetMapping("/me")
+    @Operation(summary = "Get current user's harvests", description = "Retrieve harvests for the authenticated user using X-User-Id")
+    public ResponseEntity<ApiResponseDTO<List<HarvestResponseDTO>>> getMyHarvests(
+            @RequestHeader("X-User-Id") String farmerId,
+            @RequestParam(required = false) String status) {
+        try {
+            List<HarvestResponseDTO> results = status != null && !status.isBlank()
+                ? harvestService.getHarvestsByFarmerIdAndStatus(farmerId, status)
+                : harvestService.getHarvestsByFarmerId(farmerId);
+            return ResponseEntity.ok(new ApiResponseDTO<>(true, "Harvests retrieved successfully", results));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new ApiResponseDTO<>(false, "Error retrieving user harvests: " + e.getMessage(), null));
+        }
+    }
     
     @PutMapping("/{harvestId}/status")
     @Operation(summary = "Update harvest status", description = "Update the status of a harvest")

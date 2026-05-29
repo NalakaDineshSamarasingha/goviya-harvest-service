@@ -136,6 +136,18 @@ public class HarvestService {
             .map(this::convertToResponseDTO)
             .collect(Collectors.toList());
     }
+
+    public List<HarvestResponseDTO> getHarvestsByStatus(String status) {
+        return harvestRepository.findByStatus(status).stream()
+            .map(this::convertToResponseDTO)
+            .collect(Collectors.toList());
+    }
+
+    public List<HarvestResponseDTO> getHarvestsByFarmerIdAndStatus(String farmerId, String status) {
+        return harvestRepository.findByFarmerIdAndStatus(farmerId, status).stream()
+            .map(this::convertToResponseDTO)
+            .collect(Collectors.toList());
+    }
     
     public void updateHarvestStatus(String harvestId, String status) {
         Optional<Harvest> optional = harvestRepository.findByHarvestId(harvestId);

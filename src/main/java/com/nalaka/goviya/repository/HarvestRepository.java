@@ -15,6 +15,8 @@ public interface HarvestRepository extends MongoRepository<Harvest, String> {
     Optional<Harvest> findByHarvestId(String harvestId);
     
     List<Harvest> findByFarmerId(String farmerId);
+
+    List<Harvest> findByFarmerIdAndStatus(String farmerId, String status);
     
     List<Harvest> findByStatus(String status);
     
