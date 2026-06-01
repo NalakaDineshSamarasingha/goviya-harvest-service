@@ -109,6 +109,18 @@ public class RequirementController {
                 .body(new ApiResponseDTO<>(false, "Error searching nearby requirements: " + e.getMessage(), null));
         }
     }
+
+    @GetMapping("/search")
+    @Operation(summary = "Search requirements", description = "Get all requirements")
+    public ResponseEntity<ApiResponseDTO<List<RequirementResponseDTO>>> searchRequirements() {
+        try {
+            List<RequirementResponseDTO> results = requirementService.searchRequirements();
+            return ResponseEntity.ok(new ApiResponseDTO<>(true, "Search completed successfully", results));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new ApiResponseDTO<>(false, "Error searching requirements: " + e.getMessage(), null));
+        }
+    }
     
     @GetMapping("/merchant/{merchantId}")
     @Operation(summary = "Get merchant's requirements", description = "Retrieve all requirements for a specific merchant")

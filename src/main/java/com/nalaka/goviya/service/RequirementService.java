@@ -113,6 +113,12 @@ public class RequirementService {
             throw new RuntimeException("Requirement not found with ID: " + requirementId);
         }
     }
+
+    public List<RequirementResponseDTO> searchRequirements() {
+        return requirementRepository.findAll().stream()
+            .map(this::convertToResponseDTO)
+            .collect(Collectors.toList());
+    }
     
     private RequirementResponseDTO convertToResponseDTO(Requirement requirement) {
         return new RequirementResponseDTO(
