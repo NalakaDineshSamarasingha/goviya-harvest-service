@@ -18,6 +18,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/harvests")
+@CrossOrigin(origins = "*")
 @Tag(name = "Harvest Management", description = "APIs for harvest listing and management")
 public class HarvestController {
     
@@ -109,22 +110,6 @@ public class HarvestController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(new ApiResponseDTO<>(false, "Error searching harvests: " + e.getMessage(), null));
-        }
-    }
-    
-    @GetMapping("/nearby")
-    @Operation(summary = "Search nearby harvests", description = "Search for harvests near a specific location")
-    public ResponseEntity<ApiResponseDTO<List<HarvestResponseDTO>>> searchNearby(
-            @RequestParam Double latitude,
-            @RequestParam Double longitude,
-            @RequestParam(defaultValue = "25") Integer radiusKm,
-            @RequestParam(required = false) String cropType) {
-        try {
-            List<HarvestResponseDTO> results = harvestService.searchNearby(latitude, longitude, radiusKm, cropType);
-            return ResponseEntity.ok(new ApiResponseDTO<>(true, "Nearby search completed successfully", results));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(new ApiResponseDTO<>(false, "Error searching nearby harvests: " + e.getMessage(), null));
         }
     }
     

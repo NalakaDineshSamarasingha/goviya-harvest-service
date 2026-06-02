@@ -18,6 +18,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/requirements")
+@CrossOrigin(origins = "*")
 @Tag(name = "Requirement Management", description = "APIs for merchant requirement management")
 public class RequirementController {
     
@@ -92,21 +93,6 @@ public class RequirementController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(new ApiResponseDTO<>(false, "Error deleting requirement: " + e.getMessage(), null));
-        }
-    }
-    
-    @GetMapping("/nearby")
-    @Operation(summary = "Search nearby requirements", description = "Search for merchant requirements near a specific location")
-    public ResponseEntity<ApiResponseDTO<List<RequirementResponseDTO>>> searchNearby(
-            @RequestParam Double latitude,
-            @RequestParam Double longitude,
-            @RequestParam(defaultValue = "25") Integer radiusKm) {
-        try {
-            List<RequirementResponseDTO> results = requirementService.searchNearby(latitude, longitude, radiusKm);
-            return ResponseEntity.ok(new ApiResponseDTO<>(true, "Nearby search completed successfully", results));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(new ApiResponseDTO<>(false, "Error searching nearby requirements: " + e.getMessage(), null));
         }
     }
 

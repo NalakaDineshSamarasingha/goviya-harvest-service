@@ -81,20 +81,7 @@ public class RequirementService {
             throw new RuntimeException("Requirement not found with ID: " + requirementId);
         }
     }
-    
-    public List<RequirementResponseDTO> searchNearby(Double latitude, Double longitude, Integer radiusKm) {
-        GeoJsonPoint point = new GeoJsonPoint(longitude, latitude);
-        int maxDistanceMeters = radiusKm * 1000;
-        
-        return requirementRepository.findNearby(point, maxDistanceMeters).stream()
-            .map(requirement -> {
-                RequirementResponseDTO dto = convertToResponseDTO(requirement);
-                dto.setDistanceKm(calculateDistance(latitude, longitude, 
-                    requirement.getLatitude(), requirement.getLongitude()));
-                return dto;
-            })
-            .collect(Collectors.toList());
-    }
+
     
     public List<RequirementResponseDTO> getRequirementsByMerchantId(String merchantId) {
         return requirementRepository.findByMerchantId(merchantId).stream()
@@ -136,16 +123,5 @@ public class RequirementService {
             requirement.getStatus()
         );
     }
-    
-    private Double calculateDistance(Double lat1, Double lon1, Double lat2, Double lon2) {
-        final int R = 6371; // Radius of the earth in km
-        Double latDistance = Math.toRadians(lat2 - lat1);
-        Double lonDistance = Math.toRadians(lon2 - lon1);
-        Double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
-                + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
-                * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
-        Double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        Double distance = R * c;
-        return Math.round(distance * 10.0) / 10.0;
-    }
+
 }
