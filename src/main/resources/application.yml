@@ -4,19 +4,19 @@ spring:
   boot:
     admin:
       client:
-        url: http://localhost:8080
+        url: http://localhost:9190
         enabled: true
         auto-registration: true
   profiles:
     active: local
 
 server:
-  port: 8081
+  port: 9190
   servlet:
     context-path: /api/goviya-harvest-core
 
 swagger:
-  server-url: http://165.245.191.211:8081
+  server-url: http://52.118.205.242:9190
 
 springdoc:
   swagger-ui:
